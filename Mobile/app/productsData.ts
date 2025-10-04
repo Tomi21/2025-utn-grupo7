@@ -31,3 +31,5 @@ export const products = [
     puntaje: 4.4,
   },
 ];
+
+export type Product = typeof products[number];
