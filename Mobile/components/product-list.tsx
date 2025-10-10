@@ -8,7 +8,7 @@ interface Product {
     puntaje: number;
     pickupTime?: string;
     price: number;
-    image: string | any;
+    images: string | any;
 }
 
 interface Props {
