@@ -1,16 +1,26 @@
 // app/(tabs)/index.tsx
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import { products } from "../productsData"; 
+import SearchBar from "../../components/ui/search-bar";
 
 export default function ProductList() {
   const router = useRouter();
+  const [filtered, setFiltered] = useState(products);
+  const handleSearch = (query: string) => {
+    const lower = query.toLowerCase();
+    const result = products.filter((item) =>
+      item.name.toLowerCase().includes(lower)
+    );
+    setFiltered(result);
+  };
 
   return (
     <View style={styles.container}>
+      <SearchBar onSearch={handleSearch} />
       <FlatList
-        data={products}
+        data={filtered}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
