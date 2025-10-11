@@ -19,7 +19,10 @@ export default function ImageCarousel({ images }: Props) {
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item }) => (
                 <View style={styles.imageContainer}>
-                    <Image source={typeof item === "string" ? { uri: item } : item} style={styles.image} />
+                    <Image
+                        source={typeof item === "string" ? { uri: item } : item}
+                        style={styles.image}
+                    />
                 </View>
             )}
         />
@@ -28,7 +31,7 @@ export default function ImageCarousel({ images }: Props) {
 
 const styles = StyleSheet.create({
     imageContainer: {
-        width: width - 32, // Ajusta al padding del card
+        width: width - 32, // Ajusta al padding de la card
         height: 150,
         marginRight: 8,
         borderRadius: 8,

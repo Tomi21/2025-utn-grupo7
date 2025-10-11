@@ -21,16 +21,23 @@ export default function Product({ id, name, puntaje, pickupTime, price, images }
         <TouchableOpacity
             style={styles.card}
             onPress={() => router.push(`/product/${id}`)}
+            activeOpacity={0.8}
         >
+            {/* Carrusel de imágenes */}
             <ImageCarousel images={images} />
 
+            {/* Nombre y puntaje */}
             <View style={styles.nameRow}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.puntaje}>⭐ {puntaje}</Text>
             </View>
+
+            {/* Horario de retiro */}
             <Text style={styles.pickupTime}>
                 Horario de retiro: {pickupTime ?? "No definida"}
             </Text>
+
+            {/* Precio */}
             <Text style={styles.price}>${price.toFixed(2)}</Text>
         </TouchableOpacity>
     );
