@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Platform, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
 
 interface SearchBarProps {
   placeholder?: string;
@@ -48,6 +49,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     marginVertical: 8,
+    marginTop: 32,     
+    marginBottom: 14,  
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -60,6 +63,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: "#333",
-    outlineStyle: "none", // 🔹 elimina el borde negro en web
+    ...(Platform.OS === "web" && {
+      outlineWidth: 0,
+      outlineColor: "transparent",
+    }),
   },
 });
