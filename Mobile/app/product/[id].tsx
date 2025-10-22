@@ -1,9 +1,10 @@
-import { useLocalSearchParams, Stack } from "expo-router";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { products } from "../productsData";
 import ImageCarousel from "../../components/ui/image-carousel";
 
 export default function ProductDetail() {
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const product = products.find((p) => p.id === id);
 
@@ -47,7 +48,7 @@ export default function ProductDetail() {
 
         <TouchableOpacity
           style={styles.orderButton}
-          onPress={() => alert("Pedido realizado")}
+          onPress={() => router.push(`/confirmation/${id}`)}
         >
           <Text style={styles.orderButtonText}>Realizar pedido</Text>
         </TouchableOpacity>
