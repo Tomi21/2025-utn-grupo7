@@ -1,17 +1,17 @@
+// app/(tabs)/_layout.tsx
 import { Tabs } from 'expo-router';
-import React from 'react';
-
+import React, { useContext } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Ionicons } from "@expo/vector-icons";
-import { CartProvider } from "../context/cartContext";
-
-
+import { CartProvider } from '../context/cartContext';
+import { AuthContext } from '../context/authContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { user } = useContext(AuthContext);
 
   return (
     <CartProvider>
@@ -20,7 +20,15 @@ export default function TabLayout() {
           tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           headerShown: false,
           tabBarButton: HapticTab,
-        }}>
+        }}
+      >
+        {!user && (
+          <Tabs.Screen
+            name="auth"
+            options={{ title: 'Login', tabBarButton: () => null }}
+          />
+        )}
+
         <Tabs.Screen
           name="index"
           options={{
@@ -38,10 +46,8 @@ export default function TabLayout() {
         <Tabs.Screen
           name="carrito"
           options={{
-            title: "Carrito",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="cart-outline" size={size} color={color} />
-            ),
+            title: 'Carrito',
+            tabBarIcon: ({ color, size }) => <Ionicons name="cart-outline" size={size} color={color} />,
           }}
         />
       </Tabs>
