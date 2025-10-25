@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native";
 import { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
 import { products } from "../productsData";
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function ConfirmacionCompra() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -56,6 +58,7 @@ export default function ConfirmacionCompra() {
     <>
       <Stack.Screen options={{ title: "Confirmación de compra", headerBackTitle: "Volver" }} />
 
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
         <Text style={styles.title}>{product.name}</Text>
 
@@ -67,17 +70,44 @@ export default function ConfirmacionCompra() {
         {/* MÉTODO DE PAGO */}
         <View style={styles.sectionColumn}>
           <Text style={styles.label}>Método de pago:</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={paymentMethod}
-              onValueChange={(value) => setPaymentMethod(value)}
-              mode="dropdown"
-              style={styles.picker}
-            >
-              <Picker.Item label="Efectivo" value="efectivo" />
-              <Picker.Item label="Tarjeta de crédito / débito" value="tarjeta" />
-            </Picker>
-          </View>
+          <RNPickerSelect
+            onValueChange={(value) => setPaymentMethod(value)}
+            items={[
+              { label: 'Efectivo', value: 'efectivo' },
+              { label: 'Tarjeta de crédito / débito', value: 'tarjeta' },
+            ]}
+            placeholder={{ label: 'Selecciona un método', value: null }}
+            style={{
+              inputIOS: {
+                marginTop: 8,
+                fontSize: 16,
+                paddingVertical: 12,
+                paddingHorizontal: 10,
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 8,
+                color: 'black',
+                paddingRight: 30, // espacio para el ícono de flecha
+              },
+              inputAndroid: {
+                fontSize: 16,
+                paddingHorizontal: 10,
+                paddingVertical: 8,
+                borderWidth: 0.5,
+                borderColor: 'purple',
+                borderRadius: 8,
+                color: 'black',
+                paddingRight: 30,
+              },
+              iconContainer: {
+                top: Platform.OS === 'ios' ? 20 : 20,
+                right: 20,
+              },
+            }}
+            Icon={() => {
+              return <Text style={{ fontSize: 16 }}>▼</Text>;
+            }}
+          />
         </View>
 
         {/* FORM TARJETA */}
@@ -86,6 +116,7 @@ export default function ConfirmacionCompra() {
             <TextInput
               style={styles.input}
               placeholder="Nombre en la tarjeta"
+              placeholderTextColor="#555" // color más oscuro que el gris predeterminado
               value={cardInfo.name}
               onChangeText={(text) => setCardInfo({ ...cardInfo, name: text })}
             />
@@ -94,6 +125,7 @@ export default function ConfirmacionCompra() {
               placeholder="Número de tarjeta"
               keyboardType="numeric"
               maxLength={19}
+              placeholderTextColor="#555" 
               value={cardInfo.number}
               onChangeText={(text) => setCardInfo({ ...cardInfo, number: text })}
             />
@@ -101,6 +133,7 @@ export default function ConfirmacionCompra() {
               <TextInput
                 style={[styles.input, styles.halfInput]}
                 placeholder="MM/AA"
+                placeholderTextColor="#555" 
                 value={cardInfo.expiry}
                 maxLength={5}
                 onChangeText={(text) => setCardInfo({ ...cardInfo, expiry: text })}
@@ -111,6 +144,7 @@ export default function ConfirmacionCompra() {
                 keyboardType="numeric"
                 maxLength={4}
                 secureTextEntry
+                placeholderTextColor="#555" 
                 value={cardInfo.cvv}
                 onChangeText={(text) => setCardInfo({ ...cardInfo, cvv: text })}
               />
@@ -137,10 +171,24 @@ export default function ConfirmacionCompra() {
           <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
         </View>
 
-        <TouchableOpacity style={styles.payButton} onPress={handlePay}>
-          <Text style={styles.payButtonText}>Pagar</Text>
+        {/* Botón fijo abajo */}
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            bottom: 30,
+            left: 20,
+            right: 20,
+            backgroundColor: '#4CAF50',
+            paddingVertical: 14,
+            borderRadius: 8,
+            alignItems: 'center',
+          }}
+          onPress={handlePay}
+        >
+          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Pagar</Text>
         </TouchableOpacity>
       </View>
+      </TouchableWithoutFeedback>
     </>
   );
 }
@@ -179,10 +227,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     marginTop: 8,
+    justifyContent: "flex-start",
+    
   },
   picker: {
     width: "100%",
-    height: Platform.OS === "ios" ? 180 : 48,
+    height: Platform.OS === "ios" ? 90 : 48,
+    color: "#000", // color del texto en iOS
   },
   cardForm: {
     marginTop: 8,
@@ -195,6 +246,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     fontSize: 16,
+    color: "#000", 
   },
   row: {
     flexDirection: "row",
@@ -222,7 +274,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 32,
+    marginTop: 8,
   },
   payButtonText: {
     color: "#fff",
