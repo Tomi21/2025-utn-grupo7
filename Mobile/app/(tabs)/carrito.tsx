@@ -1,6 +1,6 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
-import { useCart } from "../context/cartContext";
 import { Stack } from "expo-router";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useCart } from "../context/cartContext";
 
 export default function CartScreen() {
   const { cart, removeFromCart, clearCart } = useCart();
