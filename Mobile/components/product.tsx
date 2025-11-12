@@ -1,67 +1,98 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import ImageCarousel from "./ui/image-carousel";
+import ImageCarousel from "./ui/image-carousel"; 
+import { Local } from "../app/models"; 
 
-type ImageSource = string | number;
-
-interface ProductProps {
-    id: string;
-    name: string;
-    puntaje: number;
-    pickupTime?: string;
-    price: number;
-    images: ImageSource[];
+interface Props {
+  local: Local;
 }
 
-export default function Product({ id, name, puntaje, pickupTime, price, images }: ProductProps) {
-    const router = useRouter();
+export default function Product({ local }: Props) { 
+  
+    const router = useRouter();
 
-    return (
-        <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push(`/product/${id}`)}
-            activeOpacity={0.8}
-        >
-            {/* Carrusel de imágenes */}
-            <ImageCarousel images={images} />
+    return (
+        <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push(`/product/${local.featuredComboId}`)}
+            activeOpacity={0.8}
+        >
+            <ImageCarousel images={local.images?.filter(img => img) || []} />
 
-            {/* Nombre y puntaje */}
-            <View style={styles.nameRow}>
-                <Text style={styles.name}>{name}</Text>
-                <Text style={styles.puntaje}>⭐ {puntaje}</Text>
-            </View>
+            <View style={styles.content}>
+                <View style={styles.nameRow}>
+                    <Text style={styles.name}>{local.name}</Text>
+                    <Text style={styles.puntaje}>⭐ {local.puntaje?.toFixed(1) || '0.0'}</Text>
+                </View>
 
-            {/* Horario de retiro */}
-            <Text style={styles.pickupTime}>
-                Horario de retiro: {pickupTime ?? "No definida"}
-            </Text>
+                {/* Agrupamos la info secundaria */}
+                <View style={styles.infoGroup}>
+        
+                    {/* --- AQUÍ ESTÁ EL ARREGLO --- */}
+                    {/* El texto "Retiro:" empieza en la misma línea que <Text> */}
+                    <Text style={styles.infoText}>Retiro: {local.pickupTime ?? "No definido"}</Text>
 
-            {/* Precio */}
-            <Text style={styles.price}>${price.toFixed(2)}</Text>
-        </TouchableOpacity>
-    );
+                    {/* --- Y AQUÍ --- */}
+                    {local.phone && (
+                      <Text style={styles.infoText}>Tel: {local.phone}</Text>
+                    )}
+                </View>
+
+                <Text style={styles.price}>
+                    ${local.featuredComboPrice?.toFixed(2) || 'Error'}
+                </Text>
+
+            </View> 
+        </TouchableOpacity>
+    );
 }
 
+// Los estilos son los mismos que la última vez (¡estaban bien!)
 const styles = StyleSheet.create({
-    card: {
-        marginBottom: 16,
-        padding: 16,
-        backgroundColor: "#fff",
-        borderRadius: 8,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
+    card: {
+        marginBottom: 16,
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        overflow: 'hidden', 
+    },
+    content: { 
+        paddingVertical: 12,
+        paddingHorizontal: 16, 
     },
-    nameRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 8,
-        justifyContent: "space-between",
+    nameRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    name: { 
+        fontSize: 18, 
+        fontWeight: "bold", 
+        color: '#333',
+        flex: 1, 
+        marginRight: 8, 
     },
-    name: { fontSize: 18, fontWeight: "bold", marginTop: 8 },
-    puntaje: { fontSize: 16, fontWeight: "bold", marginTop: 8, color: "#edcc13e2" },
-    pickupTime: { fontSize: 16, marginTop: 8, color: "#555" },
-    price: { fontSize: 16, fontWeight: "bold", color: "green", marginTop: 8 },
+    puntaje: { 
+        fontSize: 16, 
+        fontWeight: "bold", 
+        color: "#edcc13e2",
+    },
+    infoGroup: { 
+        marginTop: 8, 
+    },
+    infoText: { 
+        fontSize: 16, 
+        color: "#555",
+        marginBottom: 4, 
+    },
+    price: { 
+        fontSize: 18, 
+        fontWeight: "bold", 
+        color: "green", 
+        marginTop: 8, 
+    }, 
 });

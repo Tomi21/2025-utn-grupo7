@@ -1,26 +1,21 @@
 import React from "react";
 import { FlatList } from "react-native";
-import Product from "./product";
+import Product from "./product"; // Este es tu componente 'product.tsx'
+import { Local } from "../app/models"; // <-- 1. CAMBIAMOS a 'Local'
 
-interface Product {
-    id: string;
-    name: string;
-    puntaje: number;
-    pickupTime?: string;
-    price: number;
-    images: string | any;
-}
+// 2. ELIMINA la 'interface Product' local (si la tenías)
 
 interface Props {
-    products: Product[];
+    products: Local[]; // <-- 3. CAMBIAMOS a 'Local[]'
 }
 
 export default function ProductList({ products }: Props) {
-    return (
-        <FlatList
-            data={products}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <Product {...item} />}
-        />
-    );
+    return (
+        <FlatList
+            data={products}
+            keyExtractor={(item) => item.id!} 
+            // 4. CAMBIAMOS el prop a 'local'
+            renderItem={({ item }) => <Product local={item} />} 
+        />
+    );
 }
