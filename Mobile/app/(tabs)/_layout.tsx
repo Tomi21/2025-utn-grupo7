@@ -6,7 +6,6 @@ import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { CartProvider } from '../context/cartContext';
 import { AuthContext } from '../context/authContext';
 
 export default function TabLayout() {
@@ -14,12 +13,22 @@ export default function TabLayout() {
   const { user } = useContext(AuthContext);
 
   return (
-    <CartProvider>
+    
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           headerShown: false,
           tabBarButton: HapticTab,
+          tabBarStyle: {
+            justifyContent: 'center',   // centra los botones horizontalmente
+            alignItems: 'center',       // centra los íconos dentro de cada botón
+            flexDirection: 'row',       // asegura que estén alineados en una fila
+          },
+          tabBarItemStyle: {
+            flex: 0,                    // evita que los ítems se estiren
+            width: 'auto',              // deja que el contenido determine el ancho
+            marginHorizontal: 15,       // agrega espacio entre los íconos
+          },
         }}
       >
         {!user && (
@@ -51,6 +60,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </CartProvider>
+    
   );
 }

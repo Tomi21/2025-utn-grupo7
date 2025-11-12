@@ -13,6 +13,15 @@ export interface Local {
   email?: string;
   images?: string[]; // array of urls (0..3)
   categoryIds?: string[]; // many-to-many (category <-> local)
+
+  /** El puntaje (lo pondremos manual por ahora) */
+  puntaje?: number;
+  
+  /** El ID del combo que quieres mostrar en la home */
+  featuredComboId?: string; 
+
+  /** El PRECIO copiado de ese combo (para mostrar en la lista) */
+  featuredComboPrice?: number;
 }
 
 export interface Combo {
