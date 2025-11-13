@@ -5,7 +5,7 @@ import { AuthContext } from "../context/authContext";
 
 export default function MenuScreen() {
   const router = useRouter();
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   // const handleCuenta = () => {
   //   router.push("/cuenta");
@@ -15,10 +15,10 @@ export default function MenuScreen() {
     router.push("/locales");
   };
 
-  // const handleLogout = async () => {
-  //   await logout();
-  //   router.replace("/auth");
-  // };
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/auth");
+  };
 
   if (!user) {
     // Si no hay usuario autenticado, redirigimos al login
@@ -60,7 +60,7 @@ export default function MenuScreen() {
 
         <TouchableOpacity
           style={[styles.button, styles.logoutButton]}
-          // onPress={handleLogout}
+          onPress={handleLogout}
         >
           <Text style={styles.buttonText}>Cerrar sesión</Text>
         </TouchableOpacity>
