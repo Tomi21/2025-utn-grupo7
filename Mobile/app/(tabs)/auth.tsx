@@ -8,12 +8,14 @@ import { Fonts } from "@/constants/theme";
 import { registerUser, loginUser } from "../../services/authService";
 import { User } from "../models";
 import { AuthContext } from "../context/authContext";
+import { useRouter } from "expo-router"; //
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function AuthScreen() {
   const { setUser } = useContext(AuthContext);
 
+  const router = useRouter();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,6 +37,7 @@ export default function AuthScreen() {
         user = await loginUser(email, password);
       }
       setUser(user); // actualizamos el context → redirige a las tabs
+      router.replace("/");
     } catch (err: any) {
       setError(err.message || "Ocurrió un error");
     } finally {

@@ -1,35 +1,30 @@
 import { Stack, useRouter } from "expo-router";
-import React from "react";
+import React, { useContext } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-interface User {
-  id?: string;
-  username: string;
-  nombre?: string;
-  apellido?: string;
-  email: string;
-  role?: "admin" | "user";
-}
+import { AuthContext } from "../context/authContext";
 
 export default function MenuScreen() {
-  const router = useRouter(); // 👈 navegación con expo-router
+  const router = useRouter();
+  const { user } = useContext(AuthContext);
 
-  const currentUser: User = {
-    id: "1",
-    username: "ibifano",
-    nombre: "Ian",
-    apellido: "Bifano",
-    email: "bifano@realsoftware.com.ar",
-    role: "admin",
-  };
-
-  const handleCuenta = () => {
-    router.push("/cuenta"); // 👈 más adelante podés crear esta pantalla
-  };
+  // const handleCuenta = () => {
+  //   router.push("/cuenta");
+  // };
 
   const handleLocales = () => {
-    router.push("/locales"); // 👈 va al listado de locales
+    router.push("/locales");
   };
+
+  // const handleLogout = async () => {
+  //   await logout();
+  //   router.replace("/auth");
+  // };
+
+  if (!user) {
+    // Si no hay usuario autenticado, redirigimos al login
+    router.replace("/auth");
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -37,23 +32,37 @@ export default function MenuScreen() {
 
       <View style={styles.profile}>
         <Image
-          source={{ uri: "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png" }}
+          source={{
+            uri:
+              "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png",
+          }}
           style={styles.avatar}
         />
         <Text style={styles.name}>
-          {currentUser.nombre} {currentUser.apellido}
+          {user.nombre} {user.apellido}
         </Text>
-        <Text style={styles.email}>{currentUser.email}</Text>
-        <Text style={styles.role}>Rol: {currentUser.role?.toUpperCase()}</Text>
+        <Text style={styles.email}>{user.email}</Text>
+        <Text style={styles.role}>Rol: {user.role?.toUpperCase()}</Text>
       </View>
 
       <View style={styles.menu}>
-        <TouchableOpacity style={styles.button} onPress={handleCuenta}>
+        <TouchableOpacity style={styles.button} 
+        // onPress={handleCuenta}
+        >
           <Text style={styles.buttonText}>Administrar mi cuenta</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleLocales}>
-          <Text style={styles.buttonText}>Administrar Locales</Text>
+        {user.role === "admin" && (
+          <TouchableOpacity style={styles.button} onPress={handleLocales}>
+            <Text style={styles.buttonText}>Administrar Locales</Text>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={[styles.button, styles.logoutButton]}
+          // onPress={handleLogout}
+        >
+          <Text style={styles.buttonText}>Cerrar sesión</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -98,6 +107,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
     alignItems: "center",
+  },
+  logoutButton: {
+    backgroundColor: "#E53935",
   },
   buttonText: {
     color: "#fff",
