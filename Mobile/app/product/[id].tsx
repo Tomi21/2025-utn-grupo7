@@ -1,15 +1,17 @@
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Alert, Platform } from "react-native";
 import { useState, useEffect } from "react"; 
 import ImageCarousel from "../../components/ui/image-carousel";
 import { getComboById, getLocalById } from "../../services/firebaseService"; 
 import { Combo, Local } from "../models"; 
 import { useCart } from '../context/cartContext'; // <-- 1. IMPORTAR EL CONTEXT DEL CARRITO
+import { useAuth } from '../context/authContext';
 
 export default function ProductDetail() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>(); 
   const { addToCart } = useCart(); // <-- 2. OBTENER LA FUNCIÓN 'addToCart'
+  const { user } = useAuth(); // <--  OBTENER EL USUARIO
 
   const [combo, setCombo] = useState<Combo | null>(null);
   const [local, setLocal] = useState<Local | null>(null);
@@ -44,7 +46,7 @@ export default function ProductDetail() {
     fetchData();
   }, [id]); 
 
-  // ... (Tus 'return' de loading y error no cambian) ...
+  
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -60,14 +62,46 @@ export default function ProductDetail() {
     );
   }
   
-  // --- 3. NUEVA FUNCIÓN PARA EL BOTÓN ---
+// ---  FUNCIÓN 'handleAddToCart' AHORA ES CROSS-PLATFORM ---
   const handleAddToCart = () => {
-    // Solo funciona si 'combo' y 'local' se cargaron correctamente
-    if (combo && local) {
-      addToCart(combo, local); // ¡Añade al carrito!
-      router.push('/(tabs)/carrito'); // Navega a la pantalla del carrito
+    
+    if (user) {
+      // --- A. Flujo "Logueado" (lo que ya teníamos) ---
+      if (combo && local) {
+        addToCart(combo, local); 
+        router.push('/(tabs)/carrito');
+      } else {
+        alert("Error: No se pudo añadir el producto. Intenta de nuevo.");
+      }
     } else {
-      alert("Error: No se pudo añadir el producto. Intenta de nuevo.");
+      // --- B. Flujo "Invitado" (¡Ahora con lógica Web!) ---
+      const title = "Necesitas iniciar sesión";
+      const message = "Para añadir productos al carrito, primero debes iniciar sesión.";
+
+      if (Platform.OS === 'web') {
+        // --- Versión Web ---
+        // 'confirm()' es la función nativa del navegador (alert con OK/Cancel)
+        // \n es un salto de línea
+        const userWantsToLogin = confirm(title + "\n\n" + message);
+        
+        if (userWantsToLogin) {
+          router.push('/auth');
+        }
+      } else {
+        // --- Versión Nativa (iOS/Android) ---
+        Alert.alert(
+          title,
+          message,
+          [
+            { text: "Cancelar", style: "cancel" },
+            {
+              text: "Ir a Login",
+              style: "default", 
+              onPress: () => router.push('/auth'), 
+            },
+          ]
+        );
+      }
     }
   };
 
@@ -121,7 +155,7 @@ export default function ProductDetail() {
   );
 }
 
-// ... (Tus estilos no cambian) ...
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
