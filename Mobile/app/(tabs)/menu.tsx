@@ -1,11 +1,11 @@
 import { Stack, useRouter } from "expo-router";
 import React, { useContext } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { AuthContext } from "../context/authContext";
-
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import { useAuth } from "../context/authContext"; 
 export default function MenuScreen() {
   const router = useRouter();
-  const { user } = useContext(AuthContext);
+  // --- CAMBIO 'useContext(AuthContext)' POR 'useAuth()' ---
+  const { user, logout } = useAuth();
 
   // const handleCuenta = () => {
   //   router.push("/cuenta");
@@ -15,16 +15,35 @@ export default function MenuScreen() {
     router.push("/locales");
   };
 
-  // const handleLogout = async () => {
-  //   await logout();
-  //   router.replace("/auth");
-  // };
+  const handleLogout = () => {
+    // Añadimos una alerta para confirmar
+    Alert.alert(
+      "Cerrar Sesión", // Título
+      "¿Estás seguro de que quieres cerrar sesión?", // Mensaje
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sí, cerrar sesión",
+          style: "destructive",
+          onPress: async () => {
+            console.log("BOTÓN LOGOUT PRESIONADO");
+            // Llama a la función 'logout' del contexto
+            if (logout) {
+              await logout();
+            }
+            // Redirige al usuario. 'replace' borra el historial de navegación.
+            console.log("NAVEGANDO A /auth");
+            router.replace("/auth");
+          },
+        },
+      ]
+    );
+  };
 
-  if (!user) {
-    // Si no hay usuario autenticado, redirigimos al login
-    router.replace("/auth");
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <View style={styles.container}>
@@ -60,7 +79,7 @@ export default function MenuScreen() {
 
         <TouchableOpacity
           style={[styles.button, styles.logoutButton]}
-          // onPress={handleLogout}
+           onPress={handleLogout}
         >
           <Text style={styles.buttonText}>Cerrar sesión</Text>
         </TouchableOpacity>
