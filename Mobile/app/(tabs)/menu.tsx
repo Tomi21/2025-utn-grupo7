@@ -47,7 +47,7 @@ export default function MenuScreen() {
 
       <View style={styles.menu}>
         <TouchableOpacity style={styles.button} 
-        // onPress={handleCuenta}
+         onPress={handleLocales}
         >
           <Text style={styles.buttonText}>Administrar mi cuenta</Text>
         </TouchableOpacity>
