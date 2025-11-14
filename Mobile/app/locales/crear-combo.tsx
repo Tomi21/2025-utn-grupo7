@@ -48,7 +48,7 @@ export default function CrearComboScreen() {
 
   return (
     <ScrollView style={styles.container}>
-    <Stack.Screen options={{ title: "Nuevo Combo" }} />
+    <Stack.Screen options={{ title: "Nuevo Combo", headerBackTitle: "Volver" }} />
       <Text style={styles.title}>Crear Nuevo Combo</Text>
       <Text style={styles.subtitle}>Perteneciente al local (ID: {localId})</Text>
 

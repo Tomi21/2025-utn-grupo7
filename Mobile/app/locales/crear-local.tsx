@@ -72,7 +72,7 @@ export default function FormularioLocal() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
-      <Stack.Screen options={{ title: "Nuevo Local" }} />
+      <Stack.Screen options={{ title: "Nuevo Local", headerBackTitle: "Locales" }} />
 
       <Text style={styles.label}>Nombre</Text>
       <TextInput style={styles.input} placeholder="Nombre del local" value={local.name} onChangeText={(v) => handleChange("name", v)} />

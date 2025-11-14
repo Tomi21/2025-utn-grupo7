@@ -10,18 +10,13 @@ import { useAuth } from '../context/authContext';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { user } = useAuth(); // <-- 2. CAMBIAMOS useContext(AuthContext) por useAuth()
-
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarStyle: {
-          justifyContent: 'center', 
-          alignItems: 'center',   
-          flexDirection: 'row',  
-        }
+        
       }}
     >
         {/* --- 1. PANTALLA DE LOGIN (auth) --- */}

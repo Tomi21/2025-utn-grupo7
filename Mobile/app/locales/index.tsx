@@ -45,7 +45,7 @@ export default function ListaLocales() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: "Mis Locales" }} />
+            <Stack.Screen options={{ title: "Mis Locales", headerBackTitle: "Menu"  }} />
 
             {/* Botón para agregar (se mantiene igual) */}
             <TouchableOpacity
