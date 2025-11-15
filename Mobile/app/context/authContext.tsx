@@ -1,20 +1,26 @@
 // app/context/authContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "../models";
+
 import { getLoggedUser, logoutUser as logoutService } from "../../services/authService";
+
 
 // --- 1. AÑADIMOS 'setUser' DE VUELTA AL "CONTRATO" ---
 interface AuthContextType {
-  user: User | null;
-  logout: () => Promise<void>; 
-  setUser: (u: User | null) => void; // <-- ¡HA VUELTO!
+
+  user: User | null;
+  setUser: (u: User | null) => void;
+  logout: () => Promise<void>;
+
 }
 
 // 2. AÑADIMOS 'setUser' AL VALOR POR DEFECTO
 export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  logout: async () => {}, 
-  setUser: () => {}, // <-- ¡AÑADIDO!
+ auth
+  user: null,
+  setUser: () => {},
+  logout: async () => {},
+
 });
 
 // Hook para consumir el contexto (¡importante!)
@@ -27,6 +33,7 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+
   const [user, setUser] = useState<User | null>(null); // <-- 'setUser' real
   const [loading, setLoading] = useState(true);
 

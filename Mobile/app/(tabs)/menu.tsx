@@ -4,8 +4,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-na
 import { useAuth } from "../context/authContext"; 
 export default function MenuScreen() {
   const router = useRouter();
-  // --- CAMBIO 'useContext(AuthContext)' POR 'useAuth()' ---
-  const { user, logout } = useAuth();
+
+  const { user, logout } = useContext(AuthContext);
+
 
   // const handleCuenta = () => {
   //   router.push("/cuenta");
@@ -14,6 +15,7 @@ export default function MenuScreen() {
   const handleLocales = () => {
     router.push("/locales");
   };
+
 
   const handleLogout = () => {
     // Añadimos una alerta para confirmar
@@ -42,6 +44,7 @@ export default function MenuScreen() {
       ]
     );
   };
+
 
   if (!user) return null;
 
@@ -79,6 +82,7 @@ export default function MenuScreen() {
 
         <TouchableOpacity
           style={[styles.button, styles.logoutButton]}
+
            onPress={handleLogout}
         >
           <Text style={styles.buttonText}>Cerrar sesión</Text>
