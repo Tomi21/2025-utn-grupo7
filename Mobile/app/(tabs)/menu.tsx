@@ -1,7 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import React, { useContext } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
-import { useAuth } from "../context/authContext"; 
+import { AuthContext } from "../context/authContext"; 
 export default function MenuScreen() {
   const router = useRouter();
 
@@ -46,7 +46,10 @@ export default function MenuScreen() {
   };
 
 
-  if (!user) return null;
+if (!user) {
+  router.replace("/auth");
+  return null;
+}
 
   return (
     <View style={styles.container}>

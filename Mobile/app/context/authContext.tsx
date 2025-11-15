@@ -16,10 +16,9 @@ interface AuthContextType {
 
 // 2. AÑADIMOS 'setUser' AL VALOR POR DEFECTO
 export const AuthContext = createContext<AuthContextType>({
- auth
   user: null,
-  setUser: () => {},
-  logout: async () => {},
+  setUser: () => { },
+  logout: async () => { },
 
 });
 
@@ -34,36 +33,36 @@ export const useAuth = () => {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 
-  const [user, setUser] = useState<User | null>(null); // <-- 'setUser' real
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null); // <-- 'setUser' real
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const loggedUser = await getLoggedUser();
-      setUser(loggedUser);
-      setLoading(false);
-    };
-    fetchUser();
-  }, []);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const loggedUser = await getLoggedUser();
+      setUser(loggedUser);
+      setLoading(false);
+    };
+    fetchUser();
+  }, []);
 
   const logout = async () => {
-  console.log("INTENTANDO CERRAR SESIÓN");
-  try {
-    await logoutService();
-    console.log("LOGOUT SERVICE OK, SETEANDO USER NULL");
-    setUser(null);
-    console.log("USER DESPUÉS DE SETEAR:", user);
-  } catch (error) {
-    console.error("Error al cerrar sesión:", error);
-  }
-};
+    console.log("INTENTANDO CERRAR SESIÓN");
+    try {
+      await logoutService();
+      console.log("LOGOUT SERVICE OK, SETEANDO USER NULL");
+      setUser(null);
+      console.log("USER DESPUÉS DE SETEAR:", user);
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
-  if (loading) return null; 
+  if (loading) return null;
 
-  return (
+  return (
     // --- 3. AÑADIMOS 'setUser' DE VUELTA AL 'value' ---
-    <AuthContext.Provider value={{ user, logout, setUser }}> 
-      {children}
-    </AuthContext.Provider>
-  );
+    <AuthContext.Provider value={{ user, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
