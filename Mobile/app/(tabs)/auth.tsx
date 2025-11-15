@@ -1,5 +1,5 @@
 // app/(tabs)/auth.tsx
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, Image, Dimensions } from "react-native";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
@@ -8,12 +8,14 @@ import { Fonts } from "@/constants/theme";
 import { registerUser, loginUser } from "../../services/authService";
 import { User } from "../models";
 import { AuthContext } from "../context/authContext";
+import { useAuth } from "../context/authContext";
 import { useRouter } from "expo-router"; //
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function AuthScreen() {
-  const { setUser } = useContext(AuthContext);
+  // --- 3. CAMBIAMOS 'useContext(AuthContext)' POR 'useAuth()' ---
+  const { setUser } = useAuth();
 
   const router = useRouter();
   const [isRegister, setIsRegister] = useState(false);

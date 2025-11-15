@@ -6,6 +6,8 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { AuthProvider } from './context/authContext'; // <-- 1. IMPORTAR AUTH
 import { CartProvider } from './context/cartContext'; // <-- 2. IMPORTAR CARRITO
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();
 
 export const unstable_settings = {
   anchor: '(tabs)',

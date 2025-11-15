@@ -32,9 +32,7 @@ export default function ConfirmacionExitosa() {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <Text style={styles.emoji}>🎉</Text>
             <Text style={styles.title}>¡Compra confirmada!</Text>
-            <Text style={styles.message}>
-              Tu pedido en <Text style={styles.boldText}>{localName || 'el local'}</Text> fue realizado con éxito.
-            </Text>
+            <Text style={styles.message}>Tu pedido en <Text style={styles.boldText}>{localName || 'el local'}</Text> fue realizado con éxito.</Text>
 
             <View style={styles.infoBox}>
               
@@ -118,9 +116,11 @@ const styles = StyleSheet.create({
   	shadowOffset: { width: 0, height: 2 },
   	shadowRadius: 4,
   	elevation: 2,
+    alignItems: 'center',
   },
   infoBlock: {
-    marginBottom: 16, 
+    marginBottom: 16,
+    alignItems: 'center',
   },
   infoLabelContainer: { 
     flexDirection: 'row',
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   infoIcon: { 
     fontSize: 16,
-    marginRight: 8, 
+    marginRight: 4, 
     color: '#555',
   },
   infoLabel: { 
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 18, 
     fontWeight: 'bold',
     color: '#333', 
-    marginLeft: 24, 
+    
   },
   homeButton: {
     backgroundColor: "#4CAF50",

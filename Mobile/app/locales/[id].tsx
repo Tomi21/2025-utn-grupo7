@@ -88,7 +88,7 @@ export default function DetalleLocalAdmin() {
 
     return (
         <ScrollView style={styles.container}>
-            <Stack.Screen options={{ title: local.name }} />
+            <Stack.Screen options={{ title: local.name, headerBackTitle: "Locales"}} />
             
             {/* ... (Tu sección de Info del Local no cambia) ... */}
             <View style={styles.section}>

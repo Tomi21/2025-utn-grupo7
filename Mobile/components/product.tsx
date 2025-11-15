@@ -21,11 +21,12 @@ export default function Product({ local }: Props) {
             <ImageCarousel images={local.images?.filter(img => img) || []} />
 
             <View style={styles.content}>
-                <View style={styles.nameRow}>
+                
                     <Text style={styles.name}>{local.name}</Text>
-                    <Text style={styles.puntaje}>⭐ {local.puntaje?.toFixed(1) || '0.0'}</Text>
-                </View>
-
+                    <Text style={styles.puntaje}>⭐ {local.puntaje?.toFixed(1) || '0.0'}</Text>
+                    
+               
+                <View style={styles.separator} />
                 {/* Agrupamos la info secundaria */}
                 <View style={styles.infoGroup}>
         
@@ -74,15 +75,22 @@ const styles = StyleSheet.create({
         fontWeight: "bold", 
         color: '#333',
         flex: 1, 
-        marginRight: 8, 
+        marginRight: 8,
     },
     puntaje: { 
+        marginTop: 1,
         fontSize: 16, 
         fontWeight: "bold", 
         color: "#edcc13e2",
+        textAlign: "right"
     },
+    separator: {
+    height: 1,
+    backgroundColor: "#c5c5c5ff",
+    marginVertical: 4,
+    },
     infoGroup: { 
-        marginTop: 8, 
+        marginTop: 1, 
     },
     infoText: { 
         fontSize: 16, 

@@ -1,51 +1,69 @@
 // app/context/authContext.tsx
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "../models";
-import { getLoggedUser, logoutUser } from "../../services/authService";
-import { useRouter } from "expo-router";
 
+import { getLoggedUser, logoutUser as logoutService } from "../../services/authService";
+
+
+// --- 1. AÑADIMOS 'setUser' DE VUELTA AL "CONTRATO" ---
 interface AuthContextType {
+
   user: User | null;
   setUser: (u: User | null) => void;
   logout: () => Promise<void>;
+
 }
 
+// 2. AÑADIMOS 'setUser' AL VALOR POR DEFECTO
 export const AuthContext = createContext<AuthContextType>({
+ auth
   user: null,
   setUser: () => {},
   logout: async () => {},
+
 });
 
+// Hook para consumir el contexto (¡importante!)
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth debe ser usado dentro de un AuthProvider");
+  }
+  return context;
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const loggedUser = await getLoggedUser();
-      setUser(loggedUser);
-      setLoading(false);
-    };
-    fetchUser();
-  }, []);
+  const [user, setUser] = useState<User | null>(null); // <-- 'setUser' real
+  const [loading, setLoading] = useState(true);
 
-  // 🔹 Cierra sesión completamente
+  useEffect(() => {
+    const fetchUser = async () => {
+      const loggedUser = await getLoggedUser();
+      setUser(loggedUser);
+      setLoading(false);
+    };
+    fetchUser();
+  }, []);
+
   const logout = async () => {
-    try {
-      await logoutUser(); // borra sesión de Firebase
-      setUser(null); // limpia el contexto
-      router.replace("/auth"); // vuelve al login
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
-  };
+  console.log("INTENTANDO CERRAR SESIÓN");
+  try {
+    await logoutService();
+    console.log("LOGOUT SERVICE OK, SETEANDO USER NULL");
+    setUser(null);
+    console.log("USER DESPUÉS DE SETEAR:", user);
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+  }
+};
 
-  if (loading) return null; // opcional: podés mostrar un Splash aquí
+  if (loading) return null; 
 
-  return (
-    <AuthContext.Provider value={{ user, setUser, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return (
+    // --- 3. AÑADIMOS 'setUser' DE VUELTA AL 'value' ---
+    <AuthContext.Provider value={{ user, logout, setUser }}> 
+      {children}
+    </AuthContext.Provider>
+  );
 }
